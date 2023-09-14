@@ -5,6 +5,17 @@ import path from "path";
 import indexRouter from "../routes/index.routes.js";
 import errorMiddleware from "../middleware/errorHandler.js";
 import fileUpload from "express-fileupload";
+
+import jobsSchema from "../schemas/jobs.schema.js";
+import postsSchema from "../schemas/posts.schema.js";
+import travelSchema from "../schemas/travel.schema.js";
+import commentsSchema from "../schemas/comments.schema.js";
+
+jobsSchema
+postsSchema
+travelSchema
+commentsSchema
+ 
 const app: Application = express();
 const PORT: number = Number(process.env.PORT) || 5000;
 app.use(cors());
