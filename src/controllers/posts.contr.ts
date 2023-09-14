@@ -164,7 +164,7 @@ export default {
       console.error("Error deleting post:", error);
       res.status(500).json({ message: "Internal server error." });
     }
-  },
+  }, 
   async like(req: Request, res: Response) {
     
     try {
