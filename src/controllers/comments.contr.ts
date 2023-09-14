@@ -38,7 +38,7 @@ export default {
       try {
         const commentId = req.params.id;
       // Find the comment by its ID
-      const comment = await Comment.findById(commentId);
+      const comment = await Comment.findById(commentId).populate("userId");
 
       if (!comment) {
         return res.status(404).json({ message: "Comment not found." });
