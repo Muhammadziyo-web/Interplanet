@@ -7,6 +7,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import mongoose from "mongoose";
+import err from "../Responser/error.js";
 import userSchema from "../schemas/user.schema.js";
 import { JWT } from "../utils/jwt.js";
 export default {
@@ -25,5 +27,23 @@ export default {
                 res.status(403).json({ message: "Invalid token" });
             }
         });
-    }
+    },
+    IdChecker(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.params.id;
+                if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+                    return err(res, "Invalid id", 400);
+                }
+                const user = yield userSchema.findById(userId);
+                if (!user) {
+                    throw new Error();
+                }
+                next();
+            }
+            catch (error) {
+                res.status(403).json({ message: "Invalid id" });
+            }
+        });
+    },
 };

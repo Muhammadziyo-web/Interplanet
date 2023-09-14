@@ -149,4 +149,47 @@ export default {
             }
         });
     },
+    getAll(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const user = yield User.find()
+                    .populate("posts")
+                    .populate("jobs")
+                    .populate("travel");
+                if (!user) {
+                    return res.status(404).json({ message: "Users not found." });
+                }
+                user.map((e) => {
+                    e.password = undefined;
+                    return e;
+                });
+                res.status(200).json({ data: user });
+            }
+            catch (error) {
+                console.error("Error in retrieving all user:", error);
+                res.status(500).json({ message: "Internal server error." });
+            }
+        });
+    },
+    getById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.params.id;
+                const user = yield User.findById(userId)
+                    .populate("posts")
+                    .populate("jobs")
+                    .populate("travel");
+                if (!user) {
+                    return res.status(404).json({ message: "User not found." });
+                }
+                res
+                    .status(200)
+                    .json({ data: Object.assign(Object.assign({}, user.toObject()), { password: undefined }) });
+            }
+            catch (error) {
+                console.error("Error in retrieving user by token:", error);
+                res.status(500).json({ message: "Internal server error." });
+            }
+        });
+    },
 };
