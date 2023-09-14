@@ -35,10 +35,6 @@ export default {
                 if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
                     return err(res, "Invalid id", 400);
                 }
-                const user = yield userSchema.findById(userId);
-                if (!user) {
-                    throw new Error();
-                }
                 next();
             }
             catch (error) {
