@@ -157,7 +157,7 @@ export default {
                         .json({ message: "You are not authorized to delete this post." });
                 }
                 // Delete the post
-                yield post.remove();
+                yield Post.findByIdAndDelete(postId);
                 res.status(200).json({ message: "Post deleted successfully." });
             }
             catch (error) {

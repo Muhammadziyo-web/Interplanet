@@ -152,7 +152,7 @@ export default {
       }
 
       // Delete the post
-      await post.remove();
+      await Post.findByIdAndDelete(postId);
 
       res.status(200).json({ message: "Post deleted successfully." });
     } catch (error) {
