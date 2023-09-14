@@ -8,9 +8,9 @@ export default {
     try {
       const token = req.headers.token as string;
       const userId = JWT.VERIFY(token).id;
-      const { text } = req.body;
+      const { text, title } = req.body;
 
-      if (!text) {
+      if (!text || !title || !text.trim() || !title.trim()) {
         return res.status(400).json({ message: "Invalid data" });
       }
       // Check if the user exists
@@ -23,6 +23,7 @@ export default {
       // Create a new post
       const newPost: any = new Post({
         text,
+        title,
         owner: userId, // Associate the post with the user who created it
       });
 
@@ -42,12 +43,11 @@ export default {
     }
   },
   async put(req: Request, res: Response) {
-    const postId = req.params.id;
-    const newText = req.body.text;
-    const token = req.headers.token as string;
-    const userId = JWT.VERIFY(token).id;
-
     try {
+      const postId = req.params.id;
+      const { text, title } = req.body;
+      const token = req.headers.token as string;
+      const userId = JWT.VERIFY(token).id;
       // Find the post by its ID
       const post: any = await Post.findById(postId)
         .populate({
@@ -68,7 +68,12 @@ export default {
       }
 
       // Update the post's text
-      post.text = newText;
+      if (text && text.trim()) {
+        post.text = text;
+      }
+      if (title && title.trim()) {
+        post.title = title;
+      }
 
       // Save the updated post
       await post.save();

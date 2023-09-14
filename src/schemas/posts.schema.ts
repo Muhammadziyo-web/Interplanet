@@ -2,6 +2,10 @@ import validator from "validator";
 import { isEmailValid } from "../middleware/email.cheker.js";
 import mongoose, { Schema, Document, model, Types } from "mongoose";
 const PostSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
   text: {
     type: String,
     required: true,

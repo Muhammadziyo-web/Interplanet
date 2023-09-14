@@ -16,8 +16,8 @@ export default {
             try {
                 const token = req.headers.token;
                 const userId = JWT.VERIFY(token).id;
-                const { text } = req.body;
-                if (!text) {
+                const { text, title } = req.body;
+                if (!text || !title || !text.trim() || !title.trim()) {
                     return res.status(400).json({ message: "Invalid data" });
                 }
                 // Check if the user exists
@@ -28,6 +28,7 @@ export default {
                 // Create a new post
                 const newPost = new Post({
                     text,
+                    title,
                     owner: userId, // Associate the post with the user who created it
                 });
                 // Save the new post to the database
@@ -47,11 +48,11 @@ export default {
     },
     put(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const postId = req.params.id;
-            const newText = req.body.text;
-            const token = req.headers.token;
-            const userId = JWT.VERIFY(token).id;
             try {
+                const postId = req.params.id;
+                const { text, title } = req.body;
+                const token = req.headers.token;
+                const userId = JWT.VERIFY(token).id;
                 // Find the post by its ID
                 const post = yield Post.findById(postId)
                     .populate({
@@ -69,7 +70,12 @@ export default {
                     });
                 }
                 // Update the post's text
-                post.text = newText;
+                if (text && text.trim()) {
+                    post.text = text;
+                }
+                if (title && title.trim()) {
+                    post.title = title;
+                }
                 // Save the updated post
                 yield post.save();
                 res
