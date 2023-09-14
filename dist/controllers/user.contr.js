@@ -12,11 +12,17 @@ import User from "../schemas/user.schema.js";
 import { JWT } from "../utils/jwt.js";
 import path from "path";
 import uploader from "../utils/cloudinary.js";
+import { isEmailValid } from "../middleware/email.cheker.js";
 export default {
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = req.body;
+                if (!isEmailValid(email)) {
+                    return res.status(400).json({
+                        message: "Invalid email",
+                    });
+                }
                 const existingUser = yield User.findOne({ email });
                 if (existingUser) {
                     return res.status(400).json({
