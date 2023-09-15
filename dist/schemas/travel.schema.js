@@ -20,11 +20,9 @@ const PostSchema = new Schema({
         type: String,
         required: true,
     },
-    imgages: [
-        {
-            type: String
-        }
-    ],
+    img: {
+        type: String
+    },
     owner: {
         type: mongoose.Types.ObjectId,
         ref: "Users",

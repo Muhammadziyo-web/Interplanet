@@ -164,41 +164,39 @@ export default {
       console.error("Error deleting post:", error);
       res.status(500).json({ message: "Internal server error." });
     }
-  }, 
+  },
   async like(req: Request, res: Response) {
-    
     try {
-       const postId = req.params.id;
-       const token = req.headers.token as string;
-       const userId = JWT.VERIFY(token).id;
-       const post = await Post.findById(postId);
+      const postId = req.params.id;
+      const token = req.headers.token as string;
+      const userId = JWT.VERIFY(token).id;
+      const post = await Post.findById(postId);
 
-       if (!post) {
-         return res.status(404).json({ message: "Post not found." });
-       }
+      if (!post) {
+        return res.status(404).json({ message: "Post not found." });
+      }
 
-       // Check if the user has already liked the post
-       const userHasLiked = post.likes.includes(userId);
+      // Check if the user has already liked the post
+      const userHasLiked = post.likes.includes(userId);
 
-       if (userHasLiked) {
-         // User has already liked the post, so unlike it
-         post.likes = post.likes.filter((id) => id as string != userId);
-         
-       } else {
-         // User hasn't liked the post, so like it
-         post.likes.push(userId);
-       }
+      if (userHasLiked) {
+        // User has already liked the post, so unlike it
+        post.likes = post.likes.filter((id) => (id as string) != userId);
+      } else {
+        // User hasn't liked the post, so like it
+        post.likes.push(userId);
+      }
 
-       // Save the updated post
-       await post.save();
+      // Save the updated post
+      await post.save();
 
-       const message = userHasLiked
-         ? "Post unliked successfully."
-         : "Post liked successfully.";
-       res.status(200).json({ message });
-     } catch (error) {
-       console.error("Error liking/unliking post:", error);
-       res.status(500).json({ message: "Internal server error." });
-     }
-   }
+      const message = userHasLiked
+        ? "Post unliked successfully."
+        : "Post liked successfully.";
+      res.status(200).json({ message });
+    } catch (error) {
+      console.error("Error liking/unliking post:", error);
+      res.status(500).json({ message: "Internal server error." });
+    }
+  },
 };
